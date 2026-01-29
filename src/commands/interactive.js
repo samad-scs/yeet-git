@@ -59,7 +59,10 @@ export const interactive = {
         { value: ["--p"], label: "Push Only" },
       ],
     });
-    if (isCancel(action)) cancel("Cancelled");
+    if (isCancel(action)) {
+      cancel("Cancelled");
+      process.exit(0);
+    }
     return action;
   },
 
@@ -80,11 +83,17 @@ export const interactive = {
         message,
         options,
       });
-      if (isCancel(selection)) cancel("Cancelled");
+      if (isCancel(selection)) {
+        cancel("Cancelled");
+        process.exit(0);
+      }
 
       if (selection === "MANUAL_INPUT") {
         const val = await text({ message: "Enter branch name:" });
-        if (isCancel(val)) cancel("Cancelled");
+        if (isCancel(val)) {
+          cancel("Cancelled");
+          process.exit(0);
+        }
         return val;
       }
       return selection;
@@ -101,7 +110,10 @@ export const interactive = {
         { value: "OTHER", label: "No, choose another start branch" },
       ],
     });
-    if (isCancel(startChoice)) cancel("Cancelled");
+    if (isCancel(startChoice)) {
+      cancel("Cancelled");
+      process.exit(0);
+    }
 
     if (startChoice === "OTHER") {
       currentSource = await selectBranch("Select Start Branch");
@@ -121,7 +133,10 @@ export const interactive = {
           { value: "PR", label: "Create Pull Request" },
         ],
       });
-      if (isCancel(type)) cancel("Cancelled");
+      if (isCancel(type)) {
+        cancel("Cancelled");
+        process.exit(0);
+      }
 
       let options = {};
       if (type === "PR") {
@@ -130,7 +145,10 @@ export const interactive = {
           placeholder: "Deployment",
           defaultValue: "Deployment",
         });
-        if (isCancel(label)) cancel("Cancelled");
+        if (isCancel(label)) {
+          cancel("Cancelled");
+          process.exit(0);
+        }
         if (label) options.label = label;
       }
 
@@ -151,7 +169,10 @@ export const interactive = {
       const more = await confirm({
         message: "Add another step to this pipeline?",
       });
-      if (isCancel(more)) cancel("Cancelled");
+      if (isCancel(more)) {
+        cancel("Cancelled");
+        process.exit(0);
+      }
 
       if (more) {
         currentSource = target;
@@ -176,7 +197,10 @@ export const interactive = {
       message: "Utilities",
       options: [{ value: "config", label: "Update API Key" }],
     });
-    if (isCancel(action)) cancel("Cancelled");
+    if (isCancel(action)) {
+      cancel("Cancelled");
+      process.exit(0);
+    }
 
     if (action === "config") {
       const apiKey = await text({
@@ -184,7 +208,7 @@ export const interactive = {
         placeholder: "AI...",
       });
       if (!isCancel(apiKey) && apiKey) {
-        setConfig("GEMINI_API_KEY", apiKey);
+        await setConfig("GEMINI_API_KEY", apiKey);
         logger.success("API Key updated.");
       }
     }

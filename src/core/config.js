@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import { CONSTANTS } from "./constants.js";
+import fs from "fs/promises";
+import path from "path";
 dotenv.config();
 
 const CONFIG = {
@@ -21,9 +23,29 @@ const CONFIG = {
   ROOT_DIR: process.cwd(),
 };
 
-export const setConfig = (key, value) => {
+export const setConfig = async (key, value) => {
   if (key === "GEMINI_API_KEY") {
     process.env.GEMINI_API_KEY = value;
+    // Persist to .env
+    try {
+      const envPath = path.join(process.cwd(), ".env");
+      let envContent = "";
+      try {
+        envContent = await fs.readFile(envPath, "utf-8");
+      } catch (e) {
+        // ignore if file doesn't exist
+      }
+
+      const regex = new RegExp(`^${key}=.*`, "m");
+      if (regex.test(envContent)) {
+        envContent = envContent.replace(regex, `${key}=${value}`);
+      } else {
+        envContent += `\n${key}=${value}`;
+      }
+      await fs.writeFile(envPath, envContent.trim() + "\n");
+    } catch (err) {
+      console.error("Failed to update .env file:", err);
+    }
   } else {
     // For other static properties if needed
     CONFIG[key] = value;
