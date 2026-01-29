@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡️ Auto Commit (scom)
+# ⚡️ Auto Commit (sc)
 
 **The intelligent CLI companion for the modern git workflow.**  
 _Automate commits, streamline merges, and manage complex pipelines with a single command._
@@ -15,11 +15,11 @@ _Automate commits, streamline merges, and manage complex pipelines with a single
 
 ---
 
-## 🌟 Why scom?
+## 🌟 Why sc?
 
-Writing commit messages, switching branches, pulling, merging, and pushing... it allows us to build great things, but the process itself is repetitive. **Auto Commit (`scom`)** uses Google's Gemini AI to understand your code changes and generate semantic, meaningful commit messages instantly.
+Writing commit messages, switching branches, pulling, merging, and pushing... it allows us to build great things, but the process itself is repetitive. **Auto Commit (`sc`)** uses Google's Gemini AI to understand your code changes and generate semantic, meaningful commit messages instantly.
 
-But it doesn't stop there. `scom` features a **Pipeline Engine** that lets you define complex git operations (like merging from `dev` -> `staging` -> `main`) in one semantic command.
+But it doesn't stop there. `sc` features a **Pipeline Engine** that lets you define complex git operations (like merging from `dev` -> `staging` -> `main`) in one semantic command.
 
 ---
 
@@ -37,7 +37,7 @@ npm install
 npm link
 ```
 
-Now, the `scom` (or `sc`) command is available system-wide!
+Now, the `sc` (or `sc`) command is available system-wide!
 
 ---
 

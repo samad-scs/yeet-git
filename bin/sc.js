@@ -6,7 +6,7 @@ import { validateConfig, setConfig } from "../src/core/config.js";
 
 async function main() {
   console.clear();
-  intro(theme.command(" scom CLI "));
+  intro(theme.command(" sc CLI "));
 
   // Validate Config
   let validation = validateConfig();

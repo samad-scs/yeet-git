@@ -1,9 +1,9 @@
-# Auto-Commit (scom) Issues List
+# Auto-Commit (sc) Issues List
 
 1. **Missing Configuration Prompt**
    - **Severity**: High
    - **Description**: The application immediately exits with an error if `GEMINI_API_KEY` is missing. It should minimally prompt the user to input it or provide instructions on how to get one, rather than just crashing/exiting.
-   - **Location**: `src/core/config.js`, `bin/scom.js`
+   - **Location**: `src/core/config.js`, `bin/sc.js`
 
 2. **Missing System Dependency Check (gh CLI)**
    - **Severity**: Medium
@@ -23,4 +23,4 @@
 5. **Missing Interactive Mode**
    - **Severity**: Low
    - **Description**: Running `sc` without arguments prints a message "Interactive mode not yet implemented". This is a placeholder that should eventually be addressed or improved.
-   - **Location**: `bin/scom.js`
+   - **Location**: `bin/sc.js`
