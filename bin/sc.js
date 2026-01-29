@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { logger, theme } from "../src/core/logger.js";
 import engine from "../src/core/engine.js";
-import { intro, outro, text, select, isCancel, cancel } from "@clack/prompts";
+import { interactive } from "../src/commands/interactive.js";
+import { intro, outro, text, isCancel, cancel } from "@clack/prompts";
 import { validateConfig, setConfig } from "../src/core/config.js";
 
 async function main() {
@@ -39,21 +40,8 @@ async function main() {
   let args = process.argv.slice(2);
 
   if (args.length === 0) {
-    const action = await select({
-      message: "Interactive Mode: Choose an action",
-      options: [
-        { value: ["--c"], label: "Commit (Auto-generate message)" },
-        { value: ["--c", "--p"], label: "Commit & Push" },
-        { value: ["--status"], label: "Check Status" },
-      ],
-    });
-
-    if (isCancel(action)) {
-      cancel("Operation cancelled.");
-      process.exit(0);
-    }
-
-    args = action;
+    await interactive.main();
+    return;
   }
 
   try {
