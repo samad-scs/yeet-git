@@ -37,6 +37,8 @@ npm install
 npm link
 ```
 
+> **Note:** To use Pull Request features (`--label`), you must have the [GitHub CLI (`gh`)](https://cli.github.com/) installed and authenticated.
+
 Now, the `sc` (or `sc`) command is available system-wide!
 
 ---
