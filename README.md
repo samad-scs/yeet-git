@@ -9,7 +9,7 @@ _Automate commits, streamline merges, and manage complex pipelines with a single
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![AI Powered](https://img.shields.io/badge/AI-Gemini%20Flash-blueviolet.svg)](https://deepmind.google/technologies/gemini/)
 
-[Installation](#-installation) • [Configuration](#-configuration) • [The Workflow](#-the-workflow) • [Contributing](#-contributing)
+[Installation](#-installation) • [Configuration](#-configuration) • [The Workflow](#-the-workflow) • [Documentation](./docs/README.md) • [Contributing](#-contributing)
 
 </div>
 
@@ -129,6 +129,12 @@ _`sc` will:_
 | `--merge`        | **Action**   | executes **merges** between the chain links.           |
 | `--label`        | **Action**   | similar to merge, but the **final link** becomes a PR. |
 | `-y` / `--yes`   | **Config**   | Skips confirmation prompts.                            |
+
+---
+
+## 📖 Full Documentation
+
+For detailed guides on setup, usage, examples, and advanced configuration, please visit our **[Documentation Folder](./docs/README.md)**.
 
 ---
 
