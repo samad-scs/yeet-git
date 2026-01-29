@@ -68,8 +68,14 @@ export const strategies = {
     // 1. Checkout target
     await git.checkout(target);
 
-    // 2. Pull latest
-    await git.run(["pull", CONSTANTS.DEFAULTS.REMOTE, target]);
+    // 2. Pull latest (ignore if remote branch doesn't exist)
+    try {
+      await git.run(["pull", CONSTANTS.DEFAULTS.REMOTE, target]);
+    } catch (e) {
+      if (!e.message.includes("couldn't find remote ref")) {
+        logger.warn(`Pull failed: ${e.message}`);
+      }
+    }
 
     // 3. Merge source
     try {
@@ -105,7 +111,7 @@ export const strategies = {
 
     try {
       const url = await github.createPR({
-        title: `Merge ${source} to ${target}`, // Simple title, maybe AI enhancement later?
+        title: `Merge ${source} to ${target}`,
         body: `Automated PR created by sc CLI.`,
         base: target,
         head: source,
