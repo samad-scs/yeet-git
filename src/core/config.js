@@ -3,7 +3,10 @@ import { CONSTANTS } from "./constants.js";
 dotenv.config();
 
 const CONFIG = {
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+  // Dynamic getter to allow runtime updates
+  get GEMINI_API_KEY() {
+    return process.env.GEMINI_API_KEY;
+  },
 
   // Defaults
   DEFAULT_BRANCH: CONSTANTS.DEFAULTS.BRANCH,
@@ -11,11 +14,20 @@ const CONFIG = {
   STAGING_BRANCH: CONSTANTS.DEFAULTS.STAGING_BRANCH,
 
   // Model Config
-  MODEL_NAME: "gemini-2.0-flash-exp",
+  MODEL_NAME: process.env.AI_MODEL_NAME || "gemini-2.0-flash",
   MAX_TOKENS: 8192,
 
   // Paths
   ROOT_DIR: process.cwd(),
+};
+
+export const setConfig = (key, value) => {
+  if (key === "GEMINI_API_KEY") {
+    process.env.GEMINI_API_KEY = value;
+  } else {
+    // For other static properties if needed
+    CONFIG[key] = value;
+  }
 };
 
 export const validateConfig = () => {

@@ -58,6 +58,13 @@ export const strategies = {
     const { source, target } = step;
     logger.info(`Merging ${source} into ${target}...`);
 
+    if (await git.hasChanges()) {
+      logger.error(
+        "Working directory has uncommitted changes. Please commit or stash them before merging.",
+      );
+      process.exit(1);
+    }
+
     // 1. Checkout target
     await git.checkout(target);
 
@@ -85,6 +92,12 @@ export const strategies = {
     const s = spinner();
 
     // Ensure source is pushed
+    if (await git.hasChanges()) {
+      logger.error(
+        "Working directory has uncommitted changes. Please commit or stash them before switching branches.",
+      );
+      process.exit(1);
+    }
     await git.checkout(source);
     await git.push(CONSTANTS.DEFAULTS.REMOTE, source);
 
