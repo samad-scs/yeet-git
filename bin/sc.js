@@ -39,6 +39,12 @@ async function main() {
 
   let args = process.argv.slice(2);
 
+  if (args[0] === "init") {
+    const { initCommand } = await import("../src/commands/init.js");
+    await initCommand();
+    return;
+  }
+
   if (args.length === 0) {
     await interactive.main();
     return;

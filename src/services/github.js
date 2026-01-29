@@ -44,6 +44,25 @@ class GitHubService {
       );
     }
   }
+
+  async login() {
+    // Run gh auth login - this is an interactive process
+    // We use stdio: inherit to allow user interaction in the terminal
+    try {
+      await execa("gh", ["auth", "login"], { stdio: "inherit" });
+    } catch (error) {
+      throw new Error(`GitHub login failed: ${error.message}`);
+    }
+  }
+
+  async checkAuth() {
+    try {
+      const { stdout } = await execa("gh", ["auth", "status"]);
+      return stdout.includes("Logged in to github.com");
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 export default new GitHubService();

@@ -6,6 +6,7 @@ To use **Auto Commit (sc)**, you need the following tools installed:
 
 - **Node.js**: Version 18 or higher is required. [Download Node.js](https://nodejs.org/)
 - **Git**: Ensure Git is installed and configured in your environment.
+- **GitHub CLI (`gh`)**: Required if you want to use the PR creation features (`--label`). [Installation Guide](https://cli.github.com/)
 - **Gemini API Key**: You'll need a Google Gemini API key to power the AI features.
 
 ## Installation
