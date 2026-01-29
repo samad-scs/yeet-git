@@ -1,13 +1,14 @@
 import dotenv from "dotenv";
+import { CONSTANTS } from "./constants.js";
 dotenv.config();
 
 const CONFIG = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY,
 
   // Defaults
-  DEFAULT_BRANCH: "main",
-  DEV_BRANCH: "dev",
-  STAGING_BRANCH: "staging",
+  DEFAULT_BRANCH: CONSTANTS.DEFAULTS.BRANCH,
+  DEV_BRANCH: CONSTANTS.DEFAULTS.DEV_BRANCH,
+  STAGING_BRANCH: CONSTANTS.DEFAULTS.STAGING_BRANCH,
 
   // Model Config
   MODEL_NAME: "gemini-2.0-flash-exp",

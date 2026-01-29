@@ -1,101 +1,106 @@
-import git from '../services/git.js';
-import ai from '../services/ai.js';
-import \{ logger \} from '../core/logger.js';
-import \{ intro, text, confirm, spinner \} from '@clack/prompts';
+import git from "../services/git.js";
+import ai from "../services/ai.js";
+import github from "../services/github.js";
+import { logger } from "../core/logger.js";
+import { CONSTANTS } from "../core/constants.js";
+import { text, confirm, spinner } from "@clack/prompts";
 
-export const strategies = \{
-  COMMIT: async (context) => \{
+export const strategies = {
+  COMMIT: async (step) => {
     const s = spinner();
-    s.start('Checking git status...');
-    
+    s.start("Checking git status...");
+
     const hasChanges = await git.hasChanges();
-    if (!hasChanges) \{
-      s.stop('No changes to commit.');
+    if (!hasChanges) {
+      s.stop("No changes to commit.");
       return;
-    \}
-    s.stop('Changes detected.');
+    }
+    s.stop("Changes detected.");
 
-    // Stage all
     await git.stageAll();
-    logger.step('Staged all files.');
+    logger.step("Staged all files.");
 
-    // Generate message
-    s.start('Generating commit message with AI...');
+    s.start("Generating commit message with AI...");
     const diff = await git.getDiff(true);
     const message = await ai.generateCommitMessage(diff);
-    s.stop('Message generated.');
+    s.stop("Message generated.");
 
     let finalMessage = message;
 
-    if (!context.flags.yes) \{
-      const confirmed = await confirm(\{
+    if (!step.globalFlags.yes) {
+      const confirmed = await confirm({
         message: `Commit with: "${message}"?`,
-      \});
-      if (!confirmed) \{
-        finalMessage = await text(\{
-          message: 'Enter commit message:',
-          placeholder: 'feat: ...',
-          initialValue: message
-        \});
-        if (!finalMessage) throw new Error('Commit cancelled.');
-      \}
-    \}
+      });
+      if (!confirmed) {
+        finalMessage = await text({
+          message: "Enter commit message:",
+          placeholder: "feat: ...",
+          initialValue: message,
+        });
+        if (!finalMessage) throw new Error("Commit cancelled.");
+      }
+    }
 
     await git.commit(finalMessage);
     logger.success(`Committed: ${finalMessage}`);
-  \},
+  },
 
-  PUSH: async (context) => \{
+  PUSH: async (step) => {
     const s = spinner();
-    s.start(`Pushing to ${context.currentBranch}...`);
-    await git.push('origin', context.currentBranch);
-    s.stop('Push complete.');
-    logger.success('Changes pushed to remote.');
-  \},
+    const branch = step.branch || (await git.getCurrentBranch());
+    s.start(`Pushing to ${branch}...`);
+    await git.push(CONSTANTS.DEFAULTS.REMOTE, branch);
+    s.stop("Push complete.");
+    logger.success("Changes pushed to remote.");
+  },
 
-  MERGE: async (context) => \{
-    if (!context.targetBranch) \{
-      throw new Error('Target branch not specified. Use --to-<branch> before --merge.');
-    \}
+  MERGE: async (step) => {
+    const { source, target } = step;
+    logger.info(`Merging ${source} into ${target}...`);
 
-    // Check if we need to commit first? 
-    // Usually merge implies taking current work and merging it INTO target.
-    // Or does it mean merging target INTO current?
-    // User request: "scom --to-[branch-name] --merge... So it merges to that branch from current branch"
-    // This implies: checkout target -> merge source -> push target (maybe)
-    
-    const source = context.currentBranch;
-    const target = context.targetBranch;
-
-    logger.info(`Switching to ${target} to merge ${source}...`);
-    
     // 1. Checkout target
     await git.checkout(target);
-    
-    // 2. Pull latest target to be safe
-    await git.run(['pull', 'origin', target]);
-    
+
+    // 2. Pull latest
+    await git.run(["pull", CONSTANTS.DEFAULTS.REMOTE, target]);
+
     // 3. Merge source
-    try \{
+    try {
       await git.merge(source);
       logger.success(`Merged ${source} into ${target}`);
-      
-      // 4. Push target?
-      // Assuming automatic push for "scom" flow or maybe explicit --p needed?
-      // "So it merges to dev and creates a PR...".
-      // Let's assume just local merge unless --p is present?
-      // But the context actions are linear. if --p follows --merge, it will execute PUSH.
-      // But PUSH strategy uses context.currentBranch.
-      // Since we switched branch, context.currentBranch is now STALE.
-      // WE MUST UPDATE CONTEXT!
-      
-      context.currentBranch = target; 
-      
-    \} catch (error) \{
-      logger.error('Merge conflict or error. Aborting.');
-      await git.run(['merge', '--abort']).catch(() => \{\});
-      await git.checkout(source); // Switch back
+
+      // 4. Push target (Implicit push for pipeline flow)
+      await git.push(CONSTANTS.DEFAULTS.REMOTE, target);
+      logger.success(`Pushed ${target}`);
+    } catch (error) {
+      logger.error("Merge conflict or error. Aborting.");
+      await git.run(["merge", "--abort"]).catch(() => {});
+      await git.checkout(source);
       throw error;
-    \}
-  \}
-\};
+    }
+  },
+
+  PR: async (step) => {
+    const { source, target, options } = step;
+    const s = spinner();
+
+    // Ensure source is pushed
+    await git.checkout(source);
+    await git.push(CONSTANTS.DEFAULTS.REMOTE, source);
+
+    logger.info(`Creating PR: ${source} -> ${target}`);
+
+    try {
+      const url = await github.createPR({
+        title: `Merge ${source} to ${target}`, // Simple title, maybe AI enhancement later?
+        body: `Automated PR created by sc CLI.`,
+        base: target,
+        head: source,
+        label: options.label,
+      });
+      logger.success(`PR Created: ${url}`);
+    } catch (e) {
+      logger.warn(`PR Creation failed (or exists): ${e.message}`);
+    }
+  },
+};
