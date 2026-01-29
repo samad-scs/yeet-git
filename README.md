@@ -55,7 +55,7 @@ GEMINI_API_KEY=your_google_ai_studio_key
 
 ## 📚 The Workflow
 
-`scom` scales from simple daily tasks to complex release engineering.
+`sc` scales from simple daily tasks to complex release engineering.
 
 ### Level 1: The Basics (Daily Driver)
 
@@ -69,7 +69,7 @@ The command you will use 90% of the time. Stages all changes, generates a commit
 
 ### Level 2: The Multi-Hops (Pipelines)
 
-Stop running `git checkout`, `git pull`, `git merge` manually. Tell `scom` where you want your code to go.
+Stop running `git checkout`, `git pull`, `git merge` manually. Tell `sc` where you want your code to go.
 
 **Scenario: "I finished my feature. Merge it to dev."**
 
@@ -95,7 +95,7 @@ The killer feature. Define a chain of merges in a single line.
 sc --to-dev-staging-main --merge
 ```
 
-_`scom` will:_
+_`sc` will:_
 
 1. Merge `current` → `dev` & Push
 2. Merge `dev` → `staging` & Push
@@ -111,7 +111,7 @@ When you want to merge into protected branches (like `main`), you usually need a
 sc --to-dev-main --label
 ```
 
-_`scom` will:_
+_`sc` will:_
 
 1. Merge `current` → `dev` & Push
 2. Open a GitHub PR from `dev` → `main`

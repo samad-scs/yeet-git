@@ -45,7 +45,7 @@ description: Automated issue resolution skill. Parses a list of issues from a fi
 
 1. calls `view_file` on `ISSUES.md`.
 2. Identifies Issue 1: "Missing Configuration Prompt".
-3. Reads `src/core/config.js` and `bin/scom.js`.
-4. Modifies `bin/scom.js` to add a prompt using `@clack/prompts` if config is missing.
+3. Reads `src/core/config.js` and `bin/sc.js`.
+4. Modifies `bin/sc.js` to add a prompt using `@clack/prompts` if config is missing.
 5. Marks Issue 1 as done.
 6. Moves to Issue 2...

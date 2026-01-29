@@ -3,7 +3,7 @@ name: referencing-project-context
 description: Loads the 'sweet-commit' project details, core functionalities, and architectural context into memory. Use when the user asks about the project scope, or at the start of a session to ground the agent.
 ---
 
-# Project Context: Sweet Commit (scom)
+# Project Context: Sweet Commit (sc)
 
 ## When to use this skill
 
@@ -14,7 +14,7 @@ description: Loads the 'sweet-commit' project details, core functionalities, and
 
 ## Project Overview
 
-**sweet-commit** (CLI command: `scom`) is a Node.js-based CLI tool designed to automate and enhance git workflows using AI. It leverages Google's Gemini AI to generate meaningful, Conventional Commits-compliant commit messages based on staged changes.
+**sweet-commit** (CLI command: `sc`) is a Node.js-based CLI tool designed to automate and enhance git workflows using AI. It leverages Google's Gemini AI to generate meaningful, Conventional Commits-compliant commit messages based on staged changes.
 
 ## Core Functionalities
 
@@ -45,7 +45,7 @@ description: Loads the 'sweet-commit' project details, core functionalities, and
 ```
 /
 ├── index.js          # Entry point. Error handling. Execute main.
-├── package.json      # 'scom' bin config.
+├── package.json      # 'sc' bin config.
 └── src/
     ├── main.js       # Core logic. Argument parsing. Orchestrates Workflow (Commit -> Sync -> PR).
     ├── git.js        # Git & GitHub CLI wrappers. Low-level 'git'/'gh' execution.
