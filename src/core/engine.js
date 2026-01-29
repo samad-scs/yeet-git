@@ -1,6 +1,7 @@
 import { logger } from "./logger.js";
 import parser from "./parser.js";
 import { strategies } from "../commands/strategies.js";
+import git from "../services/git.js";
 
 class WorkflowEngine {
   constructor() {
@@ -42,18 +43,41 @@ class WorkflowEngine {
       }),
     );
 
-    for (const step of pipelineToExecute) {
-      try {
-        // Inject global flags into step options if needed
-        const stepContext = { ...step, globalFlags: this.context.flags };
-        await strategies[step.type](stepContext);
-      } catch (error) {
-        logger.error(`Pipeline failed at step ${step.type}: ${error.message}`);
-        process.exit(1);
-      }
+    let initialBranch;
+    try {
+      initialBranch = await git.getCurrentBranch();
+    } catch (error) {
+      logger.debug(`Could not determine initial branch: ${error.message}`);
     }
 
-    logger.success("Pipeline completed successfully!");
+    try {
+      for (const step of pipelineToExecute) {
+        try {
+          // Inject global flags into step options if needed
+          const stepContext = { ...step, globalFlags: this.context.flags };
+          await strategies[step.type](stepContext);
+        } catch (error) {
+          logger.error(
+            `Pipeline failed at step ${step.type}: ${error.message}`,
+          );
+          throw error;
+        }
+      }
+
+      logger.success("Pipeline completed successfully!");
+    } finally {
+      if (initialBranch) {
+        try {
+          const current = await git.getCurrentBranch();
+          if (current !== initialBranch) {
+            logger.info(`Reverting to original branch: ${initialBranch}`);
+            await git.checkout(initialBranch);
+          }
+        } catch (error) {
+          logger.warn(`Failed to revert to original branch: ${error.message}`);
+        }
+      }
+    }
   }
 }
 
