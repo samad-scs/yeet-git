@@ -62,4 +62,4 @@ Copy this checklist to `task.md` or use it to track your progress.
 - **Safe Execution**: Always check `git status` before running these commands to know where you are.
 - **Modifications**: The `test_playground.txt` file is your sandbox. Don't modify critical project files for these tests.
 - **Extending Tests**: Add new command variations to this list as the project evolves and new flags are implemented.
-- **Command Alias**: If `sc` is not in the global path, use `node ./bin/scom.js` or the appropriate relative path to the binary.
+- **Command Alias**: If `sc` is not in the global path, use `node ./bin/sc.js` or the appropriate relative path to the binary.
