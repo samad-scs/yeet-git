@@ -24,15 +24,17 @@ class WorkflowEngine {
     return this;
   }
 
-  async execute() {
-    if (this.pipeline.length === 0) {
+  async execute(manualPipeline = null) {
+    const pipelineToExecute = manualPipeline || this.pipeline;
+
+    if (!pipelineToExecute || pipelineToExecute.length === 0) {
       logger.warn("No actions detected.");
       return;
     }
 
     logger.box(
       "Pipeline Execution",
-      this.pipeline.map((step) => {
+      pipelineToExecute.map((step) => {
         const desc = step.target
           ? `${step.type}: ${step.source} -> ${step.target}`
           : `${step.type}: ${step.branch || "Current"}`;
@@ -40,7 +42,7 @@ class WorkflowEngine {
       }),
     );
 
-    for (const step of this.pipeline) {
+    for (const step of pipelineToExecute) {
       try {
         // Inject global flags into step options if needed
         const stepContext = { ...step, globalFlags: this.context.flags };

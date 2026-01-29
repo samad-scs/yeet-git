@@ -5,64 +5,73 @@ import { logger } from "../core/logger.js";
 import { CONSTANTS } from "../core/constants.js";
 import { text, confirm, spinner } from "@clack/prompts";
 
-export const strategies = {
-  COMMIT: async (step) => {
-    const s = spinner();
-    s.start("Checking git status...");
+// Standalone actions for reuse
+const commitAction = async (step) => {
+  const s = spinner();
+  s.start("Checking git status...");
 
-    const hasChanges = await git.hasChanges();
-    if (!hasChanges) {
-      s.stop("No changes to commit.");
-      return;
-    }
-    s.stop("Changes detected.");
+  const hasChanges = await git.hasChanges();
+  if (!hasChanges) {
+    s.stop("No changes to commit.");
+    return;
+  }
+  s.stop("Changes detected.");
 
-    await git.stageAll();
-    logger.step("Staged all files.");
+  await git.stageAll();
+  logger.step("Staged all files.");
 
-    s.start("Generating commit message with AI...");
-    const diff = await git.getDiff(true);
-    const message = await ai.generateCommitMessage(diff);
-    s.stop("Message generated.");
+  s.start("Generating commit message with AI...");
+  const diff = await git.getDiff(true);
+  const message = await ai.generateCommitMessage(diff);
+  s.stop("Message generated.");
 
-    let finalMessage = message;
+  let finalMessage = message;
 
-    if (!step.globalFlags.yes) {
-      const confirmed = await confirm({
-        message: `Commit with: "${message}"?`,
+  if (!step.globalFlags.yes) {
+    const confirmed = await confirm({
+      message: `Commit with: "${message}"?`,
+    });
+    if (!confirmed) {
+      finalMessage = await text({
+        message: "Enter commit message:",
+        placeholder: "feat: ...",
+        initialValue: message,
       });
-      if (!confirmed) {
-        finalMessage = await text({
-          message: "Enter commit message:",
-          placeholder: "feat: ...",
-          initialValue: message,
-        });
-        if (!finalMessage) throw new Error("Commit cancelled.");
-      }
+      if (!finalMessage) throw new Error("Commit cancelled.");
     }
+  }
 
-    await git.commit(finalMessage);
-    logger.success(`Committed: ${finalMessage}`);
-  },
+  await git.commit(finalMessage);
+  logger.success(`Committed: ${finalMessage}`);
+};
 
-  PUSH: async (step) => {
-    const s = spinner();
-    const branch = step.branch || (await git.getCurrentBranch());
-    s.start(`Pushing to ${branch}...`);
-    await git.push(CONSTANTS.DEFAULTS.REMOTE, branch);
-    s.stop("Push complete.");
-    logger.success("Changes pushed to remote.");
-  },
+const pushAction = async (step) => {
+  const s = spinner();
+  const branch = step.branch || (await git.getCurrentBranch());
+  s.start(`Pushing to ${branch}...`);
+  await git.push(CONSTANTS.DEFAULTS.REMOTE, branch);
+  s.stop("Push complete.");
+  logger.success("Changes pushed to remote.");
+};
+
+export const strategies = {
+  COMMIT: commitAction,
+  PUSH: pushAction,
 
   MERGE: async (step) => {
     const { source, target } = step;
     logger.info(`Merging ${source} into ${target}...`);
 
     if (await git.hasChanges()) {
-      logger.error(
-        "Working directory has uncommitted changes. Please commit or stash them before merging.",
-      );
-      process.exit(1);
+      logger.info("Uncommitted changes detected. Auto-committing...");
+      // Force yes logic? The user asked for "auto commit", implies non-interactive if possible or just standard flow.
+      // If we reuse commitAction, it respects globalFlags.yes.
+      // If we want to Force it, we inject yes: true.
+      // Let's assume standard behavior: prompt if not -y, but DO IT instead of erroring.
+      await commitAction(step);
+
+      // Also push source before merge
+      await pushAction({ ...step, branch: source });
     }
 
     // 1. Checkout target
@@ -99,13 +108,13 @@ export const strategies = {
 
     // Ensure source is pushed
     if (await git.hasChanges()) {
-      logger.error(
-        "Working directory has uncommitted changes. Please commit or stash them before switching branches.",
-      );
-      process.exit(1);
+      logger.info("Uncommitted changes detected. Auto-committing...");
+      await commitAction(step);
     }
     await git.checkout(source);
-    await git.push(CONSTANTS.DEFAULTS.REMOTE, source);
+    // Push source logic
+    // We can use pushAction or raw git.push
+    await pushAction({ ...step, branch: source });
 
     logger.info(`Creating PR: ${source} -> ${target}`);
 

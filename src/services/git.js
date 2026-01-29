@@ -22,6 +22,14 @@ class GitService {
     }
   }
 
+  async getBranches() {
+    const output = await this.run(["branch", "--format", "%(refname:short)"]);
+    return output
+      .split("\n")
+      .map((b) => b.trim())
+      .filter(Boolean);
+  }
+
   async getCurrentBranch() {
     return this.run(["symbolic-ref", "--short", "HEAD"]);
   }
