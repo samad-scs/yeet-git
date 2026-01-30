@@ -1,20 +1,20 @@
 ---
 name: referencing-project-context
-description: Loads the 'sweet-commit' project details, core functionalities, and architectural context into memory. Use when the user asks about the project scope, or at the start of a session to ground the agent.
+description: Loads the 'yeet-git' project details, core functionalities, and architectural context into memory. Use when the user asks about the project scope, or at the start of a session to ground the agent.
 ---
 
-# Project Context: Sweet Commit (sc)
+# Project Context: Yeet Git (yeet)
 
 ## When to use this skill
 
 - When the user asks "What does this project do?", "What is the context?", or "Overview".
 - When starting a new coding session to align with the core goals (AI Commit Generation, Git Workflow Automation).
-- When you need to understand the relationship between `index.js`, `src/main.js`, `src/git.js`, and `src/utils.js`.
-- When deciding where to place new logic (Git vs AI vs Core).
+- When you need to understand the relationship between `bin/yeet.js`, `src/core/engine.js`, and `src/services/git.js`.
+- When deciding where to place new logic.
 
 ## Project Overview
 
-**sweet-commit** (CLI command: `sc`) is a Node.js-based CLI tool designed to automate and enhance git workflows using AI. It leverages Google's Gemini AI to generate meaningful, Conventional Commits-compliant commit messages based on staged changes.
+**yeet-git** (CLI command: `yeet`) is a Node.js-based CLI tool designed to automate and enhance git workflows using AI. It leverages Google's Gemini AI to generate meaningful, Conventional Commits-compliant commit messages based on staged changes.
 
 ## Core Functionalities
 
@@ -22,12 +22,12 @@ description: Loads the 'sweet-commit' project details, core functionalities, and
 
 - **Intelligent Analysis**: Analyzes git diffs of staged files.
 - **Conventional Commits**: Generates messages like `feat:`, `fix:`, `chore:`.
-- **Large Changeset Handling**: Optimizes and summarizes large diffs to fit token limits.
+- **Large Changeset Handling**: Optimizes and summaries large diffs to fit token limits.
 - **Interactive Review**: User confirms generated messages.
 
 ### 2. Comprehensive Git Workflow Automation
 
-- **Smart Staging**: `--add-and-push` flag stages all files.
+- **Smart Staging**: `--add-and-push` (or `-cp`) flag stages and pushes files.
 - **Branch Synchronization**:
   - `syncLocalWithDev`: Fetches/merges `origin/dev`.
   - `pushCurrentBranch`: Pushes to remote, sets upstream.
@@ -39,28 +39,43 @@ description: Loads the 'sweet-commit' project details, core functionalities, and
 
 - Built with `@clack/prompts`.
 - Supports "Yes mode" (`--yes`) for automation.
+- Interactive Pipeline Wizard for custom workflows.
+- Update Checker for new versions.
 
 ## Architecture & File Structure
 
 ```
 /
-├── index.js          # Entry point. Error handling. Execute main.
-├── package.json      # 'sc' bin config.
+├── bin/
+│   └── yeet.js             # CLI Entry point. Error handling. Execute main.
+├── package.json            # 'yeet' bin config.
 └── src/
-    ├── main.js       # Core logic. Argument parsing. Orchestrates Workflow (Commit -> Sync -> PR).
-    ├── git.js        # Git & GitHub CLI wrappers. Low-level 'git'/'gh' execution.
-    ├── utils.js      # AI & Data processing. Gemini API interaction. Diff parsing.
-    └── config.js     # Constants (token limits, buffer sizes).
+    ├── commands/
+    │   ├── init.js         # Initialization logic.
+    │   ├── interactive.js  # Interactive mode wizard.
+    │   └── strategies.js   # Execution strategies (Commit, Push, PR).
+    ├── core/
+    │   ├── config.js       # Configuration management.
+    │   ├── constants.js    # Static constants.
+    │   ├── engine.js       # Core logic. Orchestrates pipelines.
+    │   ├── logger.js       # Logging utility.
+    │   ├── parser.js       # Argument parsing.
+    │   ├── storage.js      # Local storage for pipelines.
+    │   └── update-checker.js # Version update notification.
+    └── services/
+        ├── ai.js           # Gemini API interaction.
+        ├── git.js          # Git CLI wrappers.
+        └── github.js       # GitHub API interaction.
 ```
 
 ## Key Dependencies
 
 - **@clack/prompts**: UI (spinners, inputs).
 - **@google/genai**: Gemini 2.0 Flash client.
-- **clipboardy**: Clipboard ops.
-- **open**: Open URLs.
+- **execa**: Command execution.
+- **dotenv**: Environment variable management.
 
 ## Configuration
 
-- **Env**: `GEMINI_API_KEY` in `.env`.
+- **Env**: `GEMINI_API_KEY`, `PR_LABELS_ENABLED` in `.env`.
 - **Git**: Uses standard git config and `gh` CLI.
