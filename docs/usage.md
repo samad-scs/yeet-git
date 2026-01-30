@@ -81,6 +81,7 @@ yeet --to-dev-main --label
 | :--------------- | :-------------------------------------------------------- |
 | `--c`            | **Commit**. Generates AI message and commits.             |
 | `--p`            | **Push**. Pushes current branch to origin.                |
+| `-cp`            | **Commit & Push**. Shortcut for commit and push.          |
 | `--to-[targets]` | Defines the pipeline structure. E.g., `--to-dev-staging`. |
 | `--merge`        | **Action**. Executes the pipeline using direct merges.    |
 | `--label`        | **Action**. Executes pipeline, ending with a PR.          |

@@ -35,6 +35,9 @@ class PipelineParser {
         this.pipeline.push({ type: "COMMIT", branch: startBranch });
       } else if (arg === "--p") {
         this.pipeline.push({ type: "PUSH", branch: startBranch });
+      } else if (arg === "-cp") {
+        this.pipeline.push({ type: "COMMIT", branch: startBranch });
+        this.pipeline.push({ type: "PUSH", branch: startBranch });
       } else if (arg.startsWith("--to-")) {
         processingChain = true;
         // Parse chain: --to-dev-staging-main -> [dev, staging, main]

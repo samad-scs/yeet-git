@@ -44,7 +44,7 @@ yeet
 yeet --c
 
 # Commit and push
-yeet --c --p
+yeet -cp
 
 # Merge to dev
 yeet --to-dev --merge
@@ -61,7 +61,7 @@ yeet --to-dev-staging-main --merge
 | ----------------------- | ------------------ |
 | `yeet`                  | Interactive wizard |
 | `yeet --c`              | AI commit          |
-| `yeet --c --p`          | Commit + Push      |
+| `yeet -cp`              | Commit + Push      |
 | `yeet --to-dev --merge` | Merge to dev       |
 | `yeet --to-X-Y --label` | Chain + PR         |
 | `yeet init`             | Setup wizard       |
