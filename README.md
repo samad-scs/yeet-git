@@ -33,31 +33,38 @@ npm install -g yeet-git
 Or install from source:
 
 ```bash
-git clone https://github.com/samad-scs/auto-commit.git
-cd auto-commit && npm install && npm link
+git clone https://github.com/samad-scs/yeet-git.git
+cd yeet-git && npm install && npm link
 ```
 
 > **Note:** PR features require the [GitHub CLI (`gh`)](https://cli.github.com/).
 
 ---
 
-## ⚙️ Configuration
+## 🚀 Getting Started
 
-On first run, you'll be prompted for your API key. Or set it manually:
+After installation, run:
 
 ```bash
-# .env file
-GEMINI_API_KEY=your_google_ai_studio_key
+yeet
 ```
+
+On first run, you'll be prompted for your **Gemini API key**.
 
 > 🔑 Get your **free key** at [Google AI Studio](https://makersuite.google.com/app/apikey).
 
----
-
-## 🚀 Quick Start
+Alternatively, set it manually in a `.env` file:
 
 ```bash
-# Interactive mode
+GEMINI_API_KEY=your_google_ai_studio_key
+```
+
+---
+
+## ⚡ Quick Start
+
+```bash
+# Interactive mode (recommended for first time)
 yeet
 
 # AI-powered commit
