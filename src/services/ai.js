@@ -116,6 +116,57 @@ class AIService {
       return "Automated PR created by sc CLI.";
     }
   }
+
+  /**
+   * Generates a changelog from a list of commits.
+   * @param {Array<{hash: string, message: string, author: string, date: string}>} commits
+   * @returns {Promise<string>}
+   */
+  async generateChangelog(commits) {
+    if (!this.client) throw new Error("AI is not initialized");
+
+    const commitList = commits
+      .map((c) => `- ${c.hash}: ${c.message} (by ${c.author}, ${c.date})`)
+      .join("\n");
+
+    const prompt = `
+      You are an expert developer. Generate a polished changelog from these Git commits.
+      
+      Format the changelog with:
+      1. Group similar changes under categories (Features, Bug Fixes, Improvements, etc.)
+      2. Write clear, user-friendly descriptions (not raw commit messages).
+      3. Use bullet points and markdown formatting.
+      4. Keep it concise but informative.
+      
+      Commits:
+      ${commitList}
+      
+      Return ONLY the changelog in markdown, no extra commentary.
+    `;
+
+    try {
+      const response = await this.client.models.generateContent({
+        model: CONFIG.MODEL_NAME,
+        contents: prompt,
+      });
+
+      let text = "";
+      if (
+        response.candidates &&
+        response.candidates.length > 0 &&
+        response.candidates[0].content &&
+        response.candidates[0].content.parts &&
+        response.candidates[0].content.parts.length > 0
+      ) {
+        text = response.candidates[0].content.parts[0].text;
+      }
+
+      return text.trim() || "No changelog generated.";
+    } catch (error) {
+      logger.error("Failed to generate changelog: " + error.message);
+      throw error;
+    }
+  }
 }
 
 export default new AIService();
