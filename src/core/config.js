@@ -25,6 +25,13 @@ const CONFIG = {
   get MODEL_NAME() {
     return process.env.AI_MODEL_NAME || CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME;
   },
+
+  get PR_LABELS_ENABLED() {
+    const val = process.env.PR_LABELS_ENABLED;
+    if (val === undefined) return CONSTANTS.DEFAULT_CONFIG.PR_LABELS_ENABLED;
+    return val === "true";
+  },
+
   MAX_TOKENS: 8192,
 
   // Paths
@@ -32,7 +39,12 @@ const CONFIG = {
 };
 
 export const setConfig = async (key, value) => {
-  const persistableKeys = ["GEMINI_API_KEY", "CONFIRMATIONS", "AI_MODEL_NAME"];
+  const persistableKeys = [
+    "GEMINI_API_KEY",
+    "CONFIRMATIONS",
+    "AI_MODEL_NAME",
+    "PR_LABELS_ENABLED",
+  ];
 
   if (persistableKeys.includes(key)) {
     process.env[key] = String(value);
@@ -69,6 +81,8 @@ export const getConfig = () => {
       : "Not Set",
     CONFIRMATIONS: CONFIG.CONFIRMATIONS,
     AI_MODEL_NAME: CONFIG.MODEL_NAME,
+    PR_LABELS_ENABLED: CONFIG.PR_LABELS_ENABLED,
+    PR_DEFAULT_LABEL: CONSTANTS.PR_DEFAULT_LABEL,
     DEFAULT_BRANCH: CONFIG.DEFAULT_BRANCH,
     DEV_BRANCH: CONFIG.DEV_BRANCH,
     STAGING_BRANCH: CONFIG.STAGING_BRANCH,
@@ -78,6 +92,10 @@ export const getConfig = () => {
 export const resetConfig = async () => {
   await setConfig("CONFIRMATIONS", CONSTANTS.DEFAULT_CONFIG.CONFIRMATIONS);
   await setConfig("AI_MODEL_NAME", CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME);
+  await setConfig(
+    "PR_LABELS_ENABLED",
+    CONSTANTS.DEFAULT_CONFIG.PR_LABELS_ENABLED,
+  );
 };
 
 export const validateConfig = () => {

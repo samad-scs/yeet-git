@@ -13,5 +13,6 @@ export const CONSTANTS = {
   DEFAULT_CONFIG: {
     CONFIRMATIONS: true,
     AI_MODEL_NAME: "gemini-2.0-flash",
+    PR_LABELS_ENABLED: true,
   },
 };

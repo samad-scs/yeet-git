@@ -149,17 +149,26 @@ export const interactive = {
       }
 
       let options = {};
-      if (type === "PR") {
-        const label = await text({
-          message: "PR Label (optional):",
-          placeholder: "Deployment",
-          defaultValue: CONSTANTS.PR_DEFAULT_LABEL,
+      if (type === "PR" && CONFIG.PR_LABELS_ENABLED) {
+        const addLabel = await confirm({
+          message: `Add label to PR? (Default: ${CONSTANTS.PR_DEFAULT_LABEL})`,
         });
-        if (isCancel(label)) {
+        if (isCancel(addLabel)) {
           cancel("Cancelled");
           process.exit(0);
         }
-        if (label) options.label = label;
+        if (addLabel) {
+          const label = await text({
+            message: "Enter PR Label:",
+            placeholder: "Deployment",
+            defaultValue: CONSTANTS.PR_DEFAULT_LABEL,
+          });
+          if (isCancel(label)) {
+            cancel("Cancelled");
+            process.exit(0);
+          }
+          if (label) options.label = label;
+        }
       }
 
       pipeline.push({
@@ -227,10 +236,11 @@ export const interactive = {
       options: [
         { value: "github", label: "1. Open GitHub" },
         { value: "toggleConfirm", label: "2. Toggle Confirmations" },
-        { value: "viewConfig", label: "3. View Config" },
-        { value: "resetConfig", label: "4. Reset Config" },
-        { value: "changelog", label: "5. Generate Changelog" },
-        { value: "apiKey", label: "6. Update API Key" },
+        { value: "togglePrLabels", label: "3. Toggle PR Labels" },
+        { value: "viewConfig", label: "4. View Config" },
+        { value: "resetConfig", label: "5. Reset Config" },
+        { value: "changelog", label: "6. Generate Changelog" },
+        { value: "apiKey", label: "7. Update API Key" },
       ],
     });
     if (isCancel(action)) {
@@ -255,6 +265,18 @@ export const interactive = {
       logger.success(
         `Confirmations ${newValue ? "enabled" : "disabled"}. (was: ${current})`,
       );
+    }
+
+    if (action === "togglePrLabels") {
+      const current = CONFIG.PR_LABELS_ENABLED;
+      const newValue = !current;
+      await setConfig("PR_LABELS_ENABLED", newValue);
+      logger.success(
+        `PR Labels ${newValue ? "enabled" : "disabled"}. (was: ${current})`,
+      );
+      if (newValue) {
+        logger.info(`Default label: ${CONSTANTS.PR_DEFAULT_LABEL}`);
+      }
     }
 
     if (action === "viewConfig") {
