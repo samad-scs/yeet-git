@@ -1,16 +1,9 @@
-import {
-  intro,
-  outro,
-  select,
-  isCancel,
-  cancel,
-  text,
-  confirm,
-} from "@clack/prompts";
-import { theme, logger } from "../core/logger.js";
-import engine from "../core/engine.js";
-import git from "../services/git.js";
+import { cancel, confirm, isCancel, select, text } from "@clack/prompts";
 import { setConfig } from "../core/config.js";
+import { CONSTANTS } from "../core/constants.js";
+import engine from "../core/engine.js";
+import { logger } from "../core/logger.js";
+import git from "../services/git.js";
 
 export const interactive = {
   main: async () => {
@@ -143,7 +136,7 @@ export const interactive = {
         const label = await text({
           message: "PR Label (optional):",
           placeholder: "Deployment",
-          defaultValue: "Deployment",
+          defaultValue: CONSTANTS.PR_DEFAULT_LABEL,
         });
         if (isCancel(label)) {
           cancel("Cancelled");
