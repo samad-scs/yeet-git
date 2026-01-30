@@ -87,6 +87,22 @@ class GitService {
     // Get the diff of commits between source and target
     return this.run(["diff", `${target}...${source}`]);
   }
+
+  async getRecentCommits(n = 10) {
+    // Get the last N commits in a simple format
+    const output = await this.run([
+      "log",
+      `-${n}`,
+      "--pretty=format:%h|%s|%an|%ar",
+    ]);
+    return output
+      .split("\n")
+      .filter(Boolean)
+      .map((line) => {
+        const [hash, message, author, date] = line.split("|");
+        return { hash, message, author, date };
+      });
+  }
 }
 
 export default new GitService();

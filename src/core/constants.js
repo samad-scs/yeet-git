@@ -8,4 +8,10 @@ export const CONSTANTS = {
     STAGING_BRANCH: "staging",
     REMOTE: "origin",
   },
+
+  // Default configuration values
+  DEFAULT_CONFIG: {
+    CONFIRMATIONS: true,
+    AI_MODEL_NAME: "gemini-2.0-flash",
+  },
 };

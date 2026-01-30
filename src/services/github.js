@@ -63,6 +63,33 @@ class GitHubService {
       return false;
     }
   }
+
+  async getRepoUrl() {
+    try {
+      await this.checkInstalled();
+      const { stdout } = await execa("gh", [
+        "repo",
+        "view",
+        "--json",
+        "url",
+        "-q",
+        ".url",
+      ]);
+      return stdout.trim();
+    } catch (error) {
+      throw new Error(`Could not get repository URL: ${error.message}`);
+    }
+  }
+
+  async openRepo() {
+    try {
+      await this.checkInstalled();
+      // gh browse opens the repo in the default browser
+      await execa("gh", ["browse"]);
+    } catch (error) {
+      throw new Error(`Could not open repository: ${error.message}`);
+    }
+  }
 }
 
 export default new GitHubService();
