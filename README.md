@@ -1,145 +1,111 @@
 <div align="center">
 
-# ⚡️ Auto Commit (sc)
+# 🚀 yeet
 
-**The intelligent CLI companion for the modern git workflow.**  
-_Automate commits, streamline merges, and manage complex pipelines with a single command._
+**Yeet your code to production.**  
+_AI-powered git CLI for smart commits, pipelines, and PRs._
 
+[![npm](https://img.shields.io/npm/v/yeet-git.svg)](https://www.npmjs.com/package/yeet-git)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![AI Powered](https://img.shields.io/badge/AI-Gemini%20Flash-blueviolet.svg)](https://deepmind.google/technologies/gemini/)
 
-[Installation](#-installation) • [Configuration](#-configuration) • [The Workflow](#-the-workflow) • [Documentation](./docs/README.md) • [Contributing](#-contributing)
+[Installation](#-installation) • [Quick Start](#-quick-start) • [Commands](#-commands) • [Documentation](./docs/README.md)
 
 </div>
 
 ---
 
-## 🌟 Why sc?
+## ✨ Why yeet?
 
-Writing commit messages, switching branches, pulling, merging, and pushing... it allows us to build great things, but the process itself is repetitive. **Auto Commit (`sc`)** uses Google's Gemini AI to understand your code changes and generate semantic, meaningful commit messages instantly.
+Writing commit messages is boring. **yeet** uses Google's Gemini AI to understand your changes and generate semantic commit messages instantly.
 
-But it doesn't stop there. `sc` features a **Pipeline Engine** that lets you define complex git operations (like merging from `dev` -> `staging` -> `main`) in one semantic command.
+But it doesn't stop there. **yeet** features a **Pipeline Engine** for complex git operations (like merging `dev` → `staging` → `main`) in one command.
 
 ---
 
 ## 📦 Installation
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/samad-scs/auto-commit.git
-cd auto-commit
-
-# 2. Install dependencies
-npm install
-
-# 3. Link the CLI globally
-npm link
+npm install -g yeet-git
 ```
 
-> **Note:** To use Pull Request features (`--label`), you must have the [GitHub CLI (`gh`)](https://cli.github.com/) installed and authenticated.
+Or install from source:
 
-Now, the `sc` (or `sc`) command is available system-wide!
+```bash
+git clone https://github.com/samad-scs/auto-commit.git
+cd auto-commit && npm install && npm link
+```
+
+> **Note:** PR features require the [GitHub CLI (`gh`)](https://cli.github.com/).
 
 ---
 
 ## ⚙️ Configuration
 
-Create a `.env` file in the root of your project (or set this in your shell's rc file).
+On first run, you'll be prompted for your API key. Or set it manually:
 
-```ini
+```bash
+# .env file
 GEMINI_API_KEY=your_google_ai_studio_key
 ```
 
-> 🔑 **Get your key totally free** at [Google AI Studio](https://makersuite.google.com/app/apikey).
+> 🔑 Get your **free key** at [Google AI Studio](https://makersuite.google.com/app/apikey).
 
 ---
 
-## 📚 The Workflow
-
-`sc` scales from simple daily tasks to complex release engineering.
-
-### Level 1: The Basics (Daily Driver)
-
-The command you will use 90% of the time. Stages all changes, generates a commit message, and commits.
-
-| Command            | Description                                                                  |
-| :----------------- | :--------------------------------------------------------------------------- |
-| **`sc --c`**       | **AI Commit.** Analyzes your diffs and prompts you with a generated message. |
-| **`sc --c --yes`** | **Instant Commit.** Skips the confirmation prompt. Use with confidence!      |
-| **`sc --p`**       | **Push.** Pushes the current branch to `origin`.                             |
-
-### Level 2: The Multi-Hops (Pipelines)
-
-Stop running `git checkout`, `git pull`, `git merge` manually. Tell `sc` where you want your code to go.
-
-**Scenario: "I finished my feature. Merge it to dev."**
+## 🚀 Quick Start
 
 ```bash
-sc --to-dev --merge
+# Interactive mode
+yeet
+
+# AI-powered commit
+yeet --c
+
+# Commit and push
+yeet --c --p
+
+# Merge to dev and push
+yeet --to-dev --merge
+
+# Deploy: dev → staging → main
+yeet --to-dev-staging-main --merge
 ```
-
-_(This merges your **current** branch into `dev` and pushes `dev`)_
-
-**Scenario: "Deploy to Staging."**
-
-```bash
-sc --to-staging --merge
-```
-
-### Level 3: Release Engineering (Chains)
-
-The killer feature. Define a chain of merges in a single line.
-
-**Scenario: "Sync my changes across the entire stack (Dev -> Staging -> Main)."**
-
-```bash
-sc --to-dev-staging-main --merge
-```
-
-_`sc` will:_
-
-1. Merge `current` → `dev` & Push
-2. Merge `dev` → `staging` & Push
-3. Merge `staging` → `main` & Push
-
-### Level 4: Pull Requests
-
-When you want to merge into protected branches (like `main`), you usually need a PR.
-
-**Scenario: "Merge to dev, then open a PR from dev to main."**
-
-```bash
-sc --to-dev-main --label
-```
-
-_`sc` will:_
-
-1. Merge `current` → `dev` & Push
-2. Open a GitHub PR from `dev` → `main`
-3. Apply the default label "Deployment"
 
 ---
 
-## 🛠️ CLI Reference
+## 📚 Commands
 
-| Flag             | Category     | Actions                                                |
-| :--------------- | :----------- | :----------------------------------------------------- |
-| `--c`            | **Core**     | **Commit**. Stages files & AI commits.                 |
-| `--p`            | **Core**     | **Push**. Pushes current branch.                       |
-| `--to-[targets]` | **Pipeline** | Defines a chain. E.g. `--to-dev-staging`.              |
-| `--merge`        | **Action**   | executes **merges** between the chain links.           |
-| `--label`        | **Action**   | similar to merge, but the **final link** becomes a PR. |
-| `-y` / `--yes`   | **Config**   | Skips confirmation prompts.                            |
+| Command                        | Description                               |
+| ------------------------------ | ----------------------------------------- |
+| `yeet`                         | Interactive mode with wizard              |
+| `yeet --c`                     | AI commit (stages all, generates message) |
+| `yeet --c --yes`               | Auto-commit without confirmation          |
+| `yeet --p`                     | Push current branch                       |
+| `yeet --to-[branches] --merge` | Chain merges (e.g., `--to-dev-staging`)   |
+| `yeet --to-[branches] --label` | Chain + create PR on final step           |
+| `yeet init`                    | Setup GitHub auth                         |
 
 ---
 
-## 📖 Full Documentation
+## 🛠️ Utilities
 
-For detailed guides on setup, usage, examples, and advanced configuration, please visit our **[Documentation Folder](./docs/README.md)**.
+Run `yeet` → **Utilities** for:
+
+- 🌐 Open GitHub repo in browser
+- 🔄 Toggle confirmation prompts
+- 📋 View/Reset configuration
+- 📝 Generate AI changelog
+
+---
+
+## 📖 Documentation
+
+See the **[docs folder](./docs/README.md)** for detailed guides.
 
 ---
 
 <div align="center">
-  <p><i>Building the future of coding, one commit at a time.</i></p>
+  <p><i>Stop writing commit messages. Start shipping.</i></p>
 </div>

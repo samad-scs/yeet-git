@@ -7,7 +7,7 @@ import { validateConfig, setConfig } from "../src/core/config.js";
 
 async function main() {
   console.clear();
-  intro(theme.command(" sc CLI "));
+  intro(theme.command(" yeet "));
 
   // Validate Config
   let validation = validateConfig();

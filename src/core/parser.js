@@ -76,7 +76,7 @@ class PipelineParser {
 
     // Unconsumed chain? Default to MERGE or Warn?
     // User examples always show a terminator flag (--merge, --label).
-    // If user does "sc --to-dev", we should probably default to... git checkout? Or Merge?
+    // If user does "yeet --to-dev", we should probably default to... git checkout? Or Merge?
     // Let's assume MERGE for safety if implicit.
     if (processingChain) {
       this._buildChain(currentSource, chainTargets, "MERGE", {});

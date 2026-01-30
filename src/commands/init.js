@@ -12,7 +12,7 @@ import { logger, theme } from "../core/logger.js";
 import github from "../services/github.js";
 
 export const initCommand = async () => {
-  intro(theme.command(" sc Init - Setup Environment "));
+  intro(theme.command(" yeet init - Setup Environment "));
 
   // 1. GitHub Auth
   const isAuth = await github.checkAuth();

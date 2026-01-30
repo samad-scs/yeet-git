@@ -120,7 +120,7 @@ export const strategies = {
 
     // Generate AI-powered description
     s.start("Generating PR description with AI...");
-    let prBody = "Automated PR created by sc CLI.";
+    let prBody = "Automated PR created by yeet.";
     try {
       const diff = await git.getDiffBetweenBranches(source, target);
       if (diff) {
