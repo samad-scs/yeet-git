@@ -1,6 +1,7 @@
 import { logger } from "./logger.js";
 import git from "../services/git.js";
 import { CONSTANTS } from "./constants.js";
+import { pipelineStorage } from "./storage.js";
 
 class PipelineParser {
   constructor() {
@@ -16,6 +17,16 @@ class PipelineParser {
     // First pass: Identify actions
     // We treat --c and --p as immediate actions on the START branch
     // We treat --to-X as starting a chain
+
+    // Check if it's a saved pipeline
+    if (args.length === 1 && !args[0].startsWith("-")) {
+      const saved = await pipelineStorage.get(args[0]);
+      if (saved) {
+        logger.info(`Loaded saved pipeline: ${args[0]}`);
+        this.pipeline = saved;
+        return this.pipeline;
+      }
+    }
 
     for (let i = 0; i < args.length; i++) {
       const arg = args[i];

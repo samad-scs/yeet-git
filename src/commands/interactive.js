@@ -4,6 +4,7 @@ import { CONSTANTS } from "../core/constants.js";
 import engine from "../core/engine.js";
 import { logger } from "../core/logger.js";
 import git from "../services/git.js";
+import { pipelineStorage } from "../core/storage.js";
 
 export const interactive = {
   main: async () => {
@@ -12,6 +13,7 @@ export const interactive = {
       message: "Interactive Mode",
       options: [
         { value: "wizard", label: "⚡️ Pipeline Wizard (Dynamic)" },
+        { value: "saved", label: "📂 Saved Pipelines" },
         { value: "commit", label: "Commit Actions" },
         { value: "utils", label: "Utilities" },
       ],
@@ -38,6 +40,11 @@ export const interactive = {
 
     if (action === "wizard") {
       await interactive.pipelineWizard();
+      return;
+    }
+
+    if (action === "saved") {
+      await interactive.savedPipelinesMenu();
       return;
     }
   },
@@ -178,6 +185,25 @@ export const interactive = {
     if (pipeline.length > 0) {
       logger.info("Generated Pipeline:");
       console.log(pipeline);
+
+      const save = await confirm({
+        message: "Save this pipeline for future use?",
+      });
+      if (save && !isCancel(save)) {
+        const name = await text({
+          message:
+            "Enter a name for this pipeline (e.g. deploy-stag) to run it later with 'sc <name>':",
+          placeholder: "deploy-stag",
+          validate: (value) => {
+            if (!value) return "Name is required";
+            if (value.includes(" ")) return "No spaces allowed";
+          },
+        });
+        if (name && !isCancel(name)) {
+          await pipelineStorage.save(name, pipeline);
+          logger.success(`Pipeline saved! Run it with: sc ${name}`);
+        }
+      }
       const run = await confirm({ message: "Run this pipeline?" });
       if (run && !isCancel(run)) {
         await engine.execute(pipeline);
@@ -204,6 +230,72 @@ export const interactive = {
         await setConfig("GEMINI_API_KEY", apiKey);
         logger.success("API Key updated.");
       }
+    }
+  },
+
+  savedPipelinesMenu: async () => {
+    const pipelines = await pipelineStorage.getAll();
+    const keys = Object.keys(pipelines);
+
+    if (keys.length === 0) {
+      logger.warn("No saved pipelines found.");
+      return;
+    }
+
+    const selectedName = await select({
+      message: "Select a Pipeline",
+      options: [
+        ...keys.map((k) => ({ value: k, label: k })),
+        { value: "BACK", label: `${keys?.length + 1}. Back to Main Menu` },
+      ],
+    });
+
+    if (isCancel(selectedName) || selectedName === "BACK") {
+      return interactive.main();
+    }
+
+    // Action Menu for Selected Pipeline
+    const action = await select({
+      message: `Action for '${selectedName}'?`,
+      options: [
+        { value: "RUN", label: "1. Run Pipeline" },
+        { value: "VIEW", label: "2. View Steps" },
+        { value: "DELETE", label: "3. Delete Pipeline" },
+        { value: "BACK", label: "4. Back to List" },
+      ],
+    });
+
+    if (isCancel(action) || action === "BACK") {
+      return interactive.savedPipelinesMenu();
+    }
+
+    const pipeline = pipelines[selectedName];
+
+    if (action === "RUN") {
+      await engine.execute(pipeline);
+    } else if (action === "VIEW") {
+      logger.info(`Steps for ${selectedName}:`);
+      pipeline.forEach((step, idx) => {
+        const desc = step.target
+          ? `${step.type}: ${step.source} -> ${step.target}`
+          : `${step.type}: ${step.branch || "Current"}`;
+        console.log(`  ${idx + 1}. ${desc}`);
+        if (step.options && Object.keys(step.options).length > 0) {
+          console.log(`     Options: ${JSON.stringify(step.options)}`);
+        }
+      });
+      // Wait for user to read?
+      await confirm({ message: "Press Enter to continue..." });
+      return interactive.savedPipelinesMenu();
+    } else if (action === "DELETE") {
+      const sure = await confirm({
+        message: `Are you sure you want to delete '${selectedName}'?`,
+      });
+      if (sure && !isCancel(sure)) {
+        await pipelineStorage.delete(selectedName);
+        logger.success(`Deleted '${selectedName}'`);
+      }
+      return interactive.savedPipelinesMenu();
     }
   },
 };
