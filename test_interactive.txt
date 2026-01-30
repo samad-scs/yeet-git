@@ -1,1 +1,2 @@
 Test content for interactive mode
+Merge to current branch -> test -> main.
