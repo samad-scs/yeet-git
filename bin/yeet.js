@@ -4,10 +4,14 @@ import engine from "../src/core/engine.js";
 import { interactive } from "../src/commands/interactive.js";
 import { intro, outro, text, isCancel, cancel } from "@clack/prompts";
 import { validateConfig, setConfig } from "../src/core/config.js";
+import { checkAndNotifyUpdate } from "../src/core/update-checker.js";
 
 async function main() {
   console.clear();
   intro(theme.command(" yeet "));
+
+  // Check for updates
+  await checkAndNotifyUpdate();
 
   // Validate Config
   let validation = validateConfig();
