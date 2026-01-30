@@ -1,6 +1,6 @@
 {
   "name": "yeet-git",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI-powered git CLI. Yeet your code to production with smart commits, pipelines, and PRs.",
   "main": "index.js",
   "bin": {
