@@ -10,13 +10,21 @@ const CONFIG = {
     return process.env.GEMINI_API_KEY;
   },
 
+  get CONFIRMATIONS() {
+    const val = process.env.CONFIRMATIONS;
+    if (val === undefined) return CONSTANTS.DEFAULT_CONFIG.CONFIRMATIONS;
+    return val === "true";
+  },
+
   // Defaults
   DEFAULT_BRANCH: CONSTANTS.DEFAULTS.BRANCH,
   DEV_BRANCH: CONSTANTS.DEFAULTS.DEV_BRANCH,
   STAGING_BRANCH: CONSTANTS.DEFAULTS.STAGING_BRANCH,
 
   // Model Config
-  MODEL_NAME: process.env.AI_MODEL_NAME || "gemini-2.0-flash",
+  get MODEL_NAME() {
+    return process.env.AI_MODEL_NAME || CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME;
+  },
   MAX_TOKENS: 8192,
 
   // Paths
@@ -24,8 +32,10 @@ const CONFIG = {
 };
 
 export const setConfig = async (key, value) => {
-  if (key === "GEMINI_API_KEY") {
-    process.env.GEMINI_API_KEY = value;
+  const persistableKeys = ["GEMINI_API_KEY", "CONFIRMATIONS", "AI_MODEL_NAME"];
+
+  if (persistableKeys.includes(key)) {
+    process.env[key] = String(value);
     // Persist to .env
     try {
       const envPath = path.join(process.cwd(), ".env");
@@ -50,6 +60,24 @@ export const setConfig = async (key, value) => {
     // For other static properties if needed
     CONFIG[key] = value;
   }
+};
+
+export const getConfig = () => {
+  return {
+    GEMINI_API_KEY: CONFIG.GEMINI_API_KEY
+      ? "***" + CONFIG.GEMINI_API_KEY.slice(-4)
+      : "Not Set",
+    CONFIRMATIONS: CONFIG.CONFIRMATIONS,
+    AI_MODEL_NAME: CONFIG.MODEL_NAME,
+    DEFAULT_BRANCH: CONFIG.DEFAULT_BRANCH,
+    DEV_BRANCH: CONFIG.DEV_BRANCH,
+    STAGING_BRANCH: CONFIG.STAGING_BRANCH,
+  };
+};
+
+export const resetConfig = async () => {
+  await setConfig("CONFIRMATIONS", CONSTANTS.DEFAULT_CONFIG.CONFIRMATIONS);
+  await setConfig("AI_MODEL_NAME", CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME);
 };
 
 export const validateConfig = () => {
