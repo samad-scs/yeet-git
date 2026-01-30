@@ -1,5 +1,5 @@
 export const CONSTANTS = {
-  PR_DEFAULT_LABEL: "Deployment",
+  PR_DEFAULT_LABEL: "🤖JARVIS",
 
   // Potential future static values can go here
   DEFAULTS: {
