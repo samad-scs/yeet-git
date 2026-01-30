@@ -1,10 +1,20 @@
-import { cancel, confirm, isCancel, select, text } from "@clack/prompts";
-import { setConfig } from "../core/config.js";
+import {
+  cancel,
+  confirm,
+  isCancel,
+  select,
+  spinner,
+  text,
+} from "@clack/prompts";
+
+import { CONFIG, getConfig, resetConfig, setConfig } from "../core/config.js";
 import { CONSTANTS } from "../core/constants.js";
 import engine from "../core/engine.js";
 import { logger } from "../core/logger.js";
-import git from "../services/git.js";
 import { pipelineStorage } from "../core/storage.js";
+import ai from "../services/ai.js";
+import git from "../services/git.js";
+import github from "../services/github.js";
 
 export const interactive = {
   main: async () => {
@@ -214,14 +224,91 @@ export const interactive = {
   utilsMenu: async () => {
     const action = await select({
       message: "Utilities",
-      options: [{ value: "config", label: "Update API Key" }],
+      options: [
+        { value: "github", label: "1. Open GitHub" },
+        { value: "toggleConfirm", label: "2. Toggle Confirmations" },
+        { value: "viewConfig", label: "3. View Config" },
+        { value: "resetConfig", label: "4. Reset Config" },
+        { value: "changelog", label: "5. Generate Changelog" },
+        { value: "apiKey", label: "6. Update API Key" },
+      ],
     });
     if (isCancel(action)) {
       cancel("Cancelled");
       process.exit(0);
     }
 
-    if (action === "config") {
+    if (action === "github") {
+      try {
+        logger.info("Opening repository in browser...");
+        await github.openRepo();
+        logger.success("Opened GitHub repository in browser.");
+      } catch (error) {
+        logger.error(error.message);
+      }
+    }
+
+    if (action === "toggleConfirm") {
+      const current = CONFIG.CONFIRMATIONS;
+      const newValue = !current;
+      await setConfig("CONFIRMATIONS", newValue);
+      logger.success(
+        `Confirmations ${newValue ? "enabled" : "disabled"}. (was: ${current})`,
+      );
+    }
+
+    if (action === "viewConfig") {
+      const config = getConfig();
+      logger.info("Current Configuration:");
+      Object.entries(config).forEach(([key, value]) => {
+        console.log(`  ${key}: ${value}`);
+      });
+      await confirm({ message: "Press Enter to continue..." });
+    }
+
+    if (action === "resetConfig") {
+      const sure = await confirm({
+        message: "Reset all settings to defaults? (API key will NOT be reset)",
+      });
+      if (sure && !isCancel(sure)) {
+        await resetConfig();
+        logger.success("Configuration reset to defaults.");
+      }
+    }
+
+    if (action === "changelog") {
+      const countInput = await text({
+        message: "How many commits to include?",
+        placeholder: "10",
+        defaultValue: "10",
+      });
+      if (isCancel(countInput)) return;
+
+      const count = parseInt(countInput) || 10;
+      const s = spinner();
+      s.start("Fetching commits...");
+
+      try {
+        const commits = await git.getRecentCommits(count);
+        if (commits.length === 0) {
+          s.stop("No commits found.");
+          return;
+        }
+        s.stop(`Found ${commits.length} commits.`);
+
+        s.start("Generating changelog with AI...");
+        const changelog = await ai.generateChangelog(commits);
+        s.stop("Changelog generated!");
+
+        console.log("\n" + changelog + "\n");
+        await confirm({ message: "Press Enter to continue..." });
+      } catch (error) {
+        s.stop("Failed.");
+        logger.error(error.message);
+      }
+    }
+
+    if (action === "apiKey") {
       const apiKey = await text({
         message: "Enter new GenAI API Key",
         placeholder: "AI...",
