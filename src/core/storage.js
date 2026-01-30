@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import os from "os";
 
-const STORAGE_DIR = path.join(os.homedir(), ".auto-commit");
+const STORAGE_DIR = path.join(os.homedir(), ".yeet");
 const STORAGE_FILE = path.join(STORAGE_DIR, "pipelines.json");
 
 async function ensureStorage() {

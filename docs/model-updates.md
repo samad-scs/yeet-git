@@ -1,6 +1,6 @@
 # Updating the AI Model
 
-By default, `auto-commit` uses the **Gemini 2.0 Flash** model for fast and efficient generation. However, you may want to use a more capable model (like Pro) or a newer version as it becomes available.
+By default, `yeet-git` uses the **Gemini 2.0 Flash** model for fast and efficient generation. However, you may want to use a more capable model (like Pro) or a newer version as it becomes available.
 
 ## Method 1: Environment Variable (Recommended)
 

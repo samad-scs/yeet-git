@@ -20,8 +20,8 @@ npm install -g yeet-git
 ### Option 2: From Source
 
 ```bash
-git clone https://github.com/samad-scs/auto-commit.git
-cd auto-commit
+git clone https://github.com/samad-scs/yeet-git.git
+cd yeet-git
 npm install
 npm link
 ```
