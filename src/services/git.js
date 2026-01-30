@@ -82,6 +82,11 @@ class GitService {
   async getStatus() {
     return this.run(["status", "--porcelain"]);
   }
+
+  async getDiffBetweenBranches(source, target) {
+    // Get the diff of commits between source and target
+    return this.run(["diff", `${target}...${source}`]);
+  }
 }
 
 export default new GitService();

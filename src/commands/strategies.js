@@ -118,10 +118,23 @@ export const strategies = {
 
     logger.info(`Creating PR: ${source} -> ${target}`);
 
+    // Generate AI-powered description
+    s.start("Generating PR description with AI...");
+    let prBody = "Automated PR created by sc CLI.";
+    try {
+      const diff = await git.getDiffBetweenBranches(source, target);
+      if (diff) {
+        prBody = await ai.generatePRDescription(diff, source, target);
+      }
+    } catch (e) {
+      logger.warn(`Could not generate AI description: ${e.message}`);
+    }
+    s.stop("Description ready.");
+
     try {
       const url = await github.createPR({
         title: `Merge ${source} to ${target}`,
-        body: `Automated PR created by sc CLI.`,
+        body: prBody,
         base: target,
         head: source,
         label: options.label,
