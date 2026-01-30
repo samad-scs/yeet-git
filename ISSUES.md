@@ -1,4 +1,4 @@
-# Auto-Commit (sc) Issues List
+# yeet Issues List
 
 ## Resolved Issues
 

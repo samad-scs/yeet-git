@@ -202,7 +202,7 @@ export const interactive = {
       if (save && !isCancel(save)) {
         const name = await text({
           message:
-            "Enter a name for this pipeline (e.g. deploy-stag) to run it later with 'sc <name>':",
+            "Enter a name for this pipeline (e.g. deploy-stag) to run it later with 'yeet <name>':",
           placeholder: "deploy-stag",
           validate: (value) => {
             if (!value) return "Name is required";
@@ -211,7 +211,7 @@ export const interactive = {
         });
         if (name && !isCancel(name)) {
           await pipelineStorage.save(name, pipeline);
-          logger.success(`Pipeline saved! Run it with: sc ${name}`);
+          logger.success(`Pipeline saved! Run it with: yeet ${name}`);
         }
       }
       const run = await confirm({ message: "Run this pipeline?" });

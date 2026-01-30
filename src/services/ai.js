@@ -110,10 +110,10 @@ class AIService {
         text = response.candidates[0].content.parts[0].text;
       }
 
-      return text.trim() || "Automated PR created by sc CLI.";
+      return text.trim() || "Automated PR created by yeet.";
     } catch (error) {
       logger.warn("Failed to generate PR description: " + error.message);
-      return "Automated PR created by sc CLI.";
+      return "Automated PR created by yeet.";
     }
   }
 

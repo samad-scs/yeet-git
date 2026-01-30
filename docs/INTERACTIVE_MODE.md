@@ -1,67 +1,63 @@
 # 🎮 Interactive Mode Guide
 
-The **auto-commit** CLI (`sc`) comes with a powerful interactive mode designed to simplify complex Git workflows.
+**yeet** includes a powerful interactive mode for complex Git workflows.
 
-To enter interactive mode, simply run the command without any arguments:
+Enter interactive mode by running without arguments:
 
 ```bash
-sc
+yeet
 ```
 
 ---
 
-## ✨ Features Overview
+## ✨ Features
 
-### 1. ⚡️ Pipeline Wizard (Dynamic)
+### 1. ⚡️ Pipeline Wizard
 
-Create custom git workflows on the fly!
+Create custom git workflows on the fly:
 
-- **Branch Selection**: Choose your source and target branches interactively.
-- **Action Chaining**: Chain multiple actions (Merge, Pull Request) together.
-  - _Example_: `feature` -> `dev` (Merge) -> `staging` (PR).
-- **Customization**: Add PR labels or other options during creation.
-- **Save for Later**: At the end of the wizard, you can **save your pipeline** to reuse it instantly next time.
+- **Branch Selection**: Choose source and target branches interactively
+- **Action Chaining**: Chain multiple actions (Merge, PR) together
+- **Save for Later**: Save pipelines for instant reuse
 
 ### 2. 📂 Saved Pipelines
 
-Manage your frequently used workflows.
+Manage frequently used workflows:
 
-- **Run**: Execute a saved pipeline with a single click.
-- **View Steps**: Inspect what a saved pipeline does before running it.
-- **Delete**: Remove old or unused pipelines.
+- **Run**: Execute a saved pipeline instantly
+- **View Steps**: Inspect pipeline before running
+- **Delete**: Remove unused pipelines
 
 > [!TIP]
-> You can also run a saved pipeline directly from the command line:
+> Run saved pipelines from command line:
 >
 > ```bash
-> sc <pipeline-name>
+> yeet <pipeline-name>
 > ```
 
 ### 3. Commit Actions
 
-Quick access to common tasks:
-
-- **Commit**: Auto-generate a commit message using AI.
-- **Commit & Push**: Commit and push changes in one go.
-- **Push Only**: Push current commits to remote.
+- **Commit**: Auto-generate commit message with AI
+- **Commit & Push**: One-step commit and push
+- **Push Only**: Push current commits
 
 ### 4. Utilities
 
-- **Update API Key**: Easily rotate or update your Gemini API Key.
+- 🌐 Open GitHub repo
+- 🔄 Toggle confirmations
+- 📋 View/Reset config
+- 📝 Generate AI changelog
+- 🔑 Update API Key
 
 ---
 
-## 🚀 Example Workflow: Creating & Saving a Pipeline
+## 🚀 Example: Creating a Pipeline
 
-1. Run `sc` and select **Pipeline Wizard**.
-2. Select your **Start Branch** (e.g., `main`).
-3. Select a **Target Branch** to merge into (e.g., `staging`).
-4. Choose an action (e.g., **Create Pull Request**).
-5. (Optional) Repeat if you want to chain more steps (e.g., merge `staging` into `prod`).
-6. When finished, the wizard will ask: **"Save this pipeline for future use?"**
-7. Select **Yes**, give it a name like `deploy-stage`.
-8. Next time, just run: `sc deploy-stage`!
+1. Run `yeet` → **Pipeline Wizard**
+2. Select **Start Branch** (e.g., `main`)
+3. Select **Target Branch** (e.g., `staging`)
+4. Choose action (e.g., **Create PR**)
+5. Save with a name like `deploy-stage`
+6. Next time, just run: `yeet deploy-stage`
 
----
-
-Happy Coding! 🚀
+Happy yeeting! 🚀

@@ -1,18 +1,39 @@
 {
-  "name": "auto-commit",
-  "version": "1.0.0",
-  "description": "",
+  "name": "yeet-git",
+  "version": "1.0.3",
+  "description": "AI-powered git CLI. Yeet your code to production with smart commits, pipelines, and PRs.",
   "main": "index.js",
   "bin": {
-    "sc": "./bin/sc.js"
+    "yeet": "bin/yeet.js"
   },
+  "files": [
+    "bin",
+    "src"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "git",
+    "cli",
+    "ai",
+    "commit",
+    "automation",
+    "gemini",
+    "conventional-commits",
+    "yeet"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samad-scs/yeet-git.git"
+  },
+  "homepage": "https://github.com/samad-scs/yeet-git#readme",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@clack/prompts": "^1.0.0",
     "@google/genai": "^1.38.0",
