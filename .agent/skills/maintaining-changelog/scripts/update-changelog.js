@@ -2,9 +2,8 @@ import { execa } from "execa";
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import ai from "../../../../src/services/ai.js";
 import { logger } from "../../../../src/core/logger.js";
-import picocolors from "picocolors";
+import ai from "../../../../src/services/ai.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = process.cwd(); // Assume run from root
@@ -55,9 +54,13 @@ async function main() {
   try {
     const changelogContent = await ai.generateChangelog(commits);
 
-    // Format the entry
+    // Read package.json for version
+    const pkg = JSON.parse(
+      await fs.readFile(path.join(ROOT_DIR, "package.json"), "utf-8"),
+    );
+    const version = pkg.version;
     const date = new Date().toISOString().split("T")[0];
-    const versionTitle = `## [Unreleased] - ${date}`;
+    const versionTitle = `## [${version}] - ${date}`;
     const newEntry = `${versionTitle}\n\n${changelogContent}\n\n`;
 
     // Read existing
