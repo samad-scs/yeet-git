@@ -1,9 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
-import os from "os";
+import { CONSTANTS } from "./constants.js";
 
-const STORAGE_DIR = path.join(os.homedir(), ".yeet");
-const STORAGE_FILE = path.join(STORAGE_DIR, "pipelines.json");
+const STORAGE_DIR = CONSTANTS.STORAGE.DIR;
+const STORAGE_FILE = CONSTANTS.STORAGE.PIPELINES_FILE;
 
 async function ensureStorage() {
   try {

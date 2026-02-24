@@ -1,19 +1,51 @@
-import dotenv from "dotenv";
 import { CONSTANTS } from "./constants.js";
-import fs from "fs/promises";
+import fs from "fs";
 import path from "path";
-dotenv.config();
+
+/**
+ * Global Configuration Store
+ * Centralizes all user preferences and API keys in ~/.yeet/config.json
+ */
+
+const ensureStorage = () => {
+  const dir = CONSTANTS.STORAGE.DIR;
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
+
+const loadGlobalConfig = () => {
+  try {
+    const filePath = CONSTANTS.STORAGE.CONFIG_FILE;
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath, "utf-8");
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    // Silently fail, we'll use defaults
+  }
+  return {};
+};
+
+const saveGlobalConfig = (config) => {
+  ensureStorage();
+  const filePath = CONSTANTS.STORAGE.CONFIG_FILE;
+  fs.writeFileSync(filePath, JSON.stringify(config, null, 2));
+};
+
+// Internal state
+const globalStore = loadGlobalConfig();
 
 const CONFIG = {
-  // Dynamic getter to allow runtime updates
+  // Env vars take precedence, then global store, then defaults
   get GEMINI_API_KEY() {
-    return process.env.GEMINI_API_KEY;
+    return process.env.GEMINI_API_KEY || globalStore.GEMINI_API_KEY;
   },
 
   get CONFIRMATIONS() {
-    const val = process.env.CONFIRMATIONS;
+    const val = process.env.CONFIRMATIONS ?? globalStore.CONFIRMATIONS;
     if (val === undefined) return CONSTANTS.DEFAULT_CONFIG.CONFIRMATIONS;
-    return val === "true";
+    return String(val) === "true";
   },
 
   // Defaults
@@ -23,13 +55,17 @@ const CONFIG = {
 
   // Model Config
   get MODEL_NAME() {
-    return process.env.AI_MODEL_NAME || CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME;
+    return (
+      process.env.AI_MODEL_NAME ||
+      globalStore.AI_MODEL_NAME ||
+      CONSTANTS.DEFAULT_CONFIG.AI_MODEL_NAME
+    );
   },
 
   get PR_LABELS_ENABLED() {
-    const val = process.env.PR_LABELS_ENABLED;
+    const val = process.env.PR_LABELS_ENABLED ?? globalStore.PR_LABELS_ENABLED;
     if (val === undefined) return CONSTANTS.DEFAULT_CONFIG.PR_LABELS_ENABLED;
-    return val === "true";
+    return String(val) === "true";
   },
 
   MAX_TOKENS: 8192,
@@ -38,6 +74,9 @@ const CONFIG = {
   ROOT_DIR: process.cwd(),
 };
 
+/**
+ * Updates a configuration value and persists it to the global store.
+ */
 export const setConfig = async (key, value) => {
   const persistableKeys = [
     "GEMINI_API_KEY",
@@ -47,26 +86,17 @@ export const setConfig = async (key, value) => {
   ];
 
   if (persistableKeys.includes(key)) {
-    process.env[key] = String(value);
-    // Persist to .env
-    try {
-      const envPath = path.join(process.cwd(), ".env");
-      let envContent = "";
-      try {
-        envContent = await fs.readFile(envPath, "utf-8");
-      } catch (e) {
-        // ignore if file doesn't exist
-      }
+    // Update local store
+    globalStore[key] = value;
 
-      const regex = new RegExp(`^${key}=.*`, "m");
-      if (regex.test(envContent)) {
-        envContent = envContent.replace(regex, `${key}=${value}`);
-      } else {
-        envContent += `\n${key}=${value}`;
-      }
-      await fs.writeFile(envPath, envContent.trim() + "\n");
+    // Persist to global config file
+    try {
+      saveGlobalConfig(globalStore);
+
+      // Keep process.env in sync for the current session
+      process.env[key] = String(value);
     } catch (err) {
-      console.error("Failed to update .env file:", err);
+      console.error("Failed to update global configuration:", err);
     }
   } else {
     // For other static properties if needed

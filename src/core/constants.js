@@ -1,5 +1,16 @@
+import path from "path";
+import os from "os";
+
+const STORAGE_DIR = path.join(os.homedir(), ".yeet");
+
 export const CONSTANTS = {
   PR_DEFAULT_LABEL: "🤖JARVIS",
+
+  STORAGE: {
+    DIR: STORAGE_DIR,
+    CONFIG_FILE: path.join(STORAGE_DIR, "config.json"),
+    PIPELINES_FILE: path.join(STORAGE_DIR, "pipelines.json"),
+  },
 
   // Potential future static values can go here
   DEFAULTS: {

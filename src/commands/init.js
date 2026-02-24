@@ -254,7 +254,7 @@ export const initCommand = async () => {
     }
 
     await setConfig("GEMINI_API_KEY", apiKey);
-    logger.success("Gemini API Key saved to .env");
+    logger.success("Gemini API Key saved to global configuration");
   } else {
     logger.success("Gemini API Key already configured.");
 

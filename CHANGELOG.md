@@ -19,6 +19,17 @@ All notable changes to this project will be documented in this file.
 - Updated `docs/usage.md` with flag references.
 
 
+## [1.2.1] - 2026-02-24
+
+### Features
+
+- **Global Config Store**: Migrated configuration (API keys, settings) from local `.env` files to a centralized global storage at `~/.yeet/config.json`. This ensures settings are shared across all repositories and keeps project directories clean.
+
+### Improvements
+
+- **Centralized Storage**: Standardized all persistent data storage in the `~/.yeet` directory.
+- **Initialization**: Updated `yeet init` to save keys globally.
+
 ## [1.2.0] - 2026-02-08
 
 ## Changelog
