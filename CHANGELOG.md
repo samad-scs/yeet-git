@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.1] - 2026-02-24
 
+*   **Features**
+    *   Updated Changelog with previous releases.
+
+## [1.2.1] - 2026-02-24
+
 ### Features
 
 - **Global Config Store**: Migrated configuration (API keys, settings) from local `.env` files to a centralized global storage at `~/.yeet/config.json`. This ensures settings are shared across all repositories and keeps project directories clean.

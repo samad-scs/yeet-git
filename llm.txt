@@ -1,0 +1,54 @@
+# yeet-git — llm.txt
+# AI-powered git CLI for smart commits and automated workflows
+# Version: 1.2.1 | License: MIT | Node: >=18 | Module: ESM
+# Repository: https://github.com/samad-scs/yeet-git
+
+## WHAT IS YEET-GIT
+
+yeet-git (CLI command: `yeet`) is a Node.js-based CLI tool that automates git workflows using AI. It leverages Gemini 2.0 Flash to generate Conventional Commits-compliant messages based on staged changes, manages PR pipelines, and synchronizes branches.
+
+## INSTALL
+
+```bash
+npm install -g yeet-git
+```
+
+## CORE COMMANDS
+
+### yeet (default)
+The main command. Analyzes staged changes and suggests a commit message.
+- `--yes`: Skip confirmation and commit immediately.
+- `--add-and-push` (`-cp`): Stages all changes, commits with AI message, and pushes.
+- `--retry`: Regenerate the message.
+
+### yeet init
+Initializes the configuration and sets up the Gemini API key.
+
+### yeet interactive
+Enters the pipeline wizard for complex workflows (Branch Sync -> PR -> Merge).
+
+## ARCHITECTURE FOR AI AGENTS
+
+### 1. Entry Point
+- `bin/yeet.js`: CLI entry point, handles error boundaries and execution.
+
+### 2. Core Engine
+- `src/core/engine.js`: Orchestrates execution pipelines.
+- `src/core/config.js`: Configuration management (API keys, settings).
+
+### 3. Services (Internal)
+- `src/services/ai.js`: Gemini API integration for message generation.
+- `src/services/git.js`: Wrappers for git CLI operations using `execa`.
+- `src/services/github.js`: GitHub API interaction for PRs and status checks.
+
+### 4. Logic Placement
+- New git-specific logic should go in `src/services/git.js`.
+- New AI-related logic or prompts should go in `src/services/ai.js`.
+- New CLI commands or flags belong in `src/commands/`.
+
+## GUIDELINES
+
+1. **Prompting**: Always summarize large diffs (implemented in `src/services/ai.js`) before sending to the model to stay within token limits.
+2. **Security**: Never log or store the `GEMINI_API_KEY` in plain text logs.
+3. **UI**: User `@clack/prompts` for all terminal UI elements.
+4. **Errors**: Catch all `execa` failures and provide meaningful feedback.
