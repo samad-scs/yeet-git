@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 
 # Changelog
 
+## [1.2.2] - 2026-05-06
+
+### Improvements
+* **Model Upgrade**: Updated the core system to support the Gemini 3 Flash model for enhanced performance.
+
+### Documentation
+* **Updated References**: Refreshed all documentation and technical references to reflect the transition to Gemini 3 Flash.
+* **History Sync**: Updated the changelog to include details from previous releases.
+
+### Maintenance
+* **Release v1.2.2**: Official version bump and release preparation.
+* **Project Setup**: Completed initial project initialization and repository configuration.
+
+## [1.2.2] - 2026-05-06
+
+# Changelog
+
 ## Improvements
 - **Data Model:** Updated the core model to improve performance and data integrity.
 
