@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2026-05-06
+
+# Changelog
+
+## Improvements
+- **Data Model:** Updated the core model to improve performance and data integrity.
+
+## Project Setup
+- **Initialization:** Established the initial project structure and baseline configuration.
+- **Documentation:** Populated the changelog with historical release data to maintain comprehensive project tracking.
+
 ## [1.2.1] - 2026-02-24
 
 *   **Features**
