@@ -1,6 +1,6 @@
 # yeet-git — llm.txt
 # AI-powered git CLI for smart commits and automated workflows
-# Version: 1.2.2 | License: MIT | Node: >=18 | Module: ESM
+# Version: 1.2.3 | License: MIT | Node: >=18 | Module: ESM
 # Repository: https://github.com/samad-scs/yeet-git
 
 ## WHAT IS YEET-GIT
