@@ -32,13 +32,13 @@ const CONFIG = {
   // ... other config
 
   // Update the default string here
-  MODEL_NAME: process.env.AI_MODEL_NAME || "gemini-3-flash-preview",
+  MODEL_NAME: process.env.AI_MODEL_NAME || 'gemini-3-flash-preview',
 
   // ...
-};
+}
 ```
 
-3.  Change `"gemini-2.0-flash"` to your desired model identifier (e.g., `"gemini-1.5-pro-latest"`).
+3.  Change `"gemini-3-flash-preview"` to your desired model identifier (e.g., `"gemini-1.5-pro-latest"`).
 
 ## Customizing Prompts
 
@@ -54,5 +54,5 @@ To change _how_ the AI generates commit messages (e.g., to enforce a specific te
 const prompt = `
   You are an expert developer...
   // Your custom instructions here
-`;
+`
 ```
