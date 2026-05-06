@@ -63,6 +63,6 @@ source ~/.bashrc
 You can configure the AI model:
 
 ```bash
-export AI_MODEL_NAME=gemini-1.5-pro # Optional: Defaults to gemini-2.0-flash
+export AI_MODEL_NAME=gemini-1.5-pro # Optional: Defaults to gemini-3-flash-preview
 export PR_LABELS_ENABLED=false     # Optional: Set to false to disable PR label prompts
 ```

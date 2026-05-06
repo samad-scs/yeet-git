@@ -8,7 +8,7 @@ _AI-powered git CLI for smart commits, pipelines, and PRs._
 [![npm](https://img.shields.io/npm/v/yeet-git.svg)](https://www.npmjs.com/package/yeet-git)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
-[![AI Powered](https://img.shields.io/badge/AI-Gemini%20Flash-blueviolet.svg)](https://deepmind.google/technologies/gemini/)
+[![AI Powered](https://img.shields.io/badge/AI-Gemini%203%20Flash-blueviolet.svg)](https://deepmind.google/technologies/gemini/)
 
 </div>
 

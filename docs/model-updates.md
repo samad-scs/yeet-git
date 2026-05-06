@@ -1,6 +1,6 @@
 # Updating the AI Model
 
-By default, `yeet-git` uses the **Gemini 2.0 Flash** model for fast and efficient generation. However, you may want to use a more capable model (like Pro) or a newer version as it becomes available.
+By default, `yeet-git` uses the **Gemini 3 Flash** model for fast and efficient generation. However, you may want to use a more capable model (like Pro) or a newer version as it becomes available.
 
 ## Method 1: Environment Variable (Recommended)
 
@@ -32,7 +32,7 @@ const CONFIG = {
   // ... other config
 
   // Update the default string here
-  MODEL_NAME: process.env.AI_MODEL_NAME || "gemini-2.0-flash",
+  MODEL_NAME: process.env.AI_MODEL_NAME || "gemini-3-flash-preview",
 
   // ...
 };
